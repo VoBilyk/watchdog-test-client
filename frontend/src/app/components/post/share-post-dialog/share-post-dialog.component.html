@@ -1,0 +1,17 @@
+<div class="container">
+    <form [formGroup]="form">
+        <div class="form-control">
+            <label>Enter the email address you want the post sent:</label>
+            <input type="text" placeholder="Email" formControlName="email">
+            <div *ngIf="form.get('email').invalid && form.get('email').touched" class="validation">
+                <small *ngIf="form.get('email').errors.required">Field email can't be empty</small>
+                <small *ngIf="form.get('email').errors.email">Enter correct email</small>
+                <small *ngIf="form.get('email').errors.restrictedEmail">Email {{form.get('email').value}}
+                    is forbidden</small>
+                <small *ngIf="form.get('email').errors.uniqEmail">Email {{form.get('email').value}} is occupied</small>
+            </div>
+        </div>
+        <button class="btn" type="submit" [mat-dialog-close]="form"
+            [disabled]="form.invalid || form.pending">Send</button>
+    </form>
+</div>

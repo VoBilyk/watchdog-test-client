@@ -1,0 +1,39 @@
+<mat-card class="post-create-container">
+    <div *ngIf="loading" class="mat-spinner-wrapper">
+        <mat-spinner></mat-spinner>
+    </div>
+    <mat-card-content *ngIf="!isUpdating">
+        <mat-form-field>
+            <textarea [(ngModel)]="post.body" matInput placeholder="Write something..."></textarea>
+        </mat-form-field>
+        <div class="image-container">
+            <mat-icon aria-label="Send" (click)="removeImage()">close</mat-icon>
+            <img mat-card-image class="post-image" *ngIf="imageUrl" mat-card-image src="{{imageUrl}}" alt="Photo">
+        </div>
+    </mat-card-content>
+    <mat-card-content *ngIf="isUpdating">
+        <mat-form-field>
+            <textarea [(ngModel)]="updatePost.body" matInput placeholder="Edit something..."></textarea>
+        </mat-form-field>
+        <div class="image-container">
+            <mat-icon aria-label="Send" (click)="removeImage()">close</mat-icon>
+            <img mat-card-image class="post-image" *ngIf="this.updatePost.previewImage" mat-card-image
+                src="{{this.updatePost.previewImage}}" alt="Photo">
+        </div>
+    </mat-card-content>
+    <mat-card-actions align="end">
+        <input hidden #file accept="image/*" type="file" (change)="loadImage($event.target)">
+        <button mat-icon-button color="accent" (click)="file.click()">
+            <mat-icon aria-label="Choose an image">image</mat-icon>
+        </button>
+        <button *ngIf="!isUpdating; else updatePostTemplate" color="primary" matTooltip="Post it"
+            (click)="createPost()">
+            <mat-icon aria-label="Send">send</mat-icon>
+        </button>
+        <ng-template #updatePostTemplate>
+            <button color="primary" matTooltip="Save" (click)="editPost()">
+                <mat-icon aria-label="Update">save</mat-icon>
+            </button>
+        </ng-template>
+    </mat-card-actions>
+</mat-card>

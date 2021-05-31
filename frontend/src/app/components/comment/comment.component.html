@@ -1,0 +1,43 @@
+<mat-card>
+  <div *ngIf="loading" class="mat-spinner-wrapper">
+    <mat-spinner></mat-spinner>
+  </div>
+  <mat-card-header>
+    <img mat-card-avatar src="{{comment.author.avatar}}" alt="Avatar">
+    <mat-card-title>{{comment.author.userName}} </mat-card-title>
+    <div>{{comment.createdAt | date:'d/M/yy, h:mm a'}}</div>
+  </mat-card-header>
+  <mat-card-content>
+    <p>{{comment.body}}</p>
+  </mat-card-content>
+  <mat-card-actions class="actions-buttons" align="end">
+    <button mat-icon-button color="primary" (click)="likeComment()">
+      <mat-icon matBadge="{{likeCount}}" matBadgeColor="accent" matBadgeSize="small" [matBadgeHidden]="likeCount === 0"
+        aria-label="Like">favorite</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="dislikeComment()">
+      <mat-icon matBadge="{{dislikeCount}}" matBadgeColor="accent" matBadgeSize="small"
+        [matBadgeHidden]="dislikeCount === 0" aria-label="Dislike">thumb_down</mat-icon>
+    </button>
+    <button *ngIf="currentUser && currentUser.id === comment.author.id" mat-icon-button color="accent"
+      (click)="editComment()">
+      <mat-icon aria-label="Edit">edit</mat-icon>
+    </button>
+    <button *ngIf="currentUser && currentUser.id === comment.author.id" mat-icon-button color="accent">
+      <mat-icon aria-label="Delete" (click)="deleteComment()">delete</mat-icon>
+    </button>
+    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="More">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="displayWhoLiked()">
+        <mat-icon>favorite</mat-icon>
+        <span>Show all who liked</span>
+      </button>
+      <button mat-menu-item (click)="displayWhoDisliked()">
+        <mat-icon>thumb_down</mat-icon>
+        <span>Show all who disliked</span>
+      </button>
+    </mat-menu>
+  </mat-card-actions>
+</mat-card>

@@ -1,0 +1,16 @@
+<div mat-dialog-title>
+    <div mat-dialog-actions align="end">
+        <button mat-button (click)="onCloseClick()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>
+<div mat-dialog-content>
+    <h2 style="text-align: center;" *ngIf="data.reactions.length === 0">No one user.</h2>
+    <mat-card *ngFor="let reaction of data.reactions">
+        <mat-card-header>
+            <img mat-card-avatar src="{{reaction.user.avatar}}" alt="Avatar">
+            <mat-card-title>{{reaction.user.userName}}</mat-card-title>
+        </mat-card-header>
+    </mat-card>
+</div>

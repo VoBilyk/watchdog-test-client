@@ -1,0 +1,9 @@
+<div mat-dialog-content>
+    <mat-form-field>
+        <textarea [(ngModel)]="data.comment" matInput placeholder="Edit something..."></textarea>
+    </mat-form-field>
+</div>
+<div mat-dialog-actions>
+    <button mat-button (click)="onBackClick()">Back</button>
+    <button mat-button color="success" [mat-dialog-close]="data.comment" cdkFocusInitial>Save</button>
+</div>
