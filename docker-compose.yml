@@ -39,7 +39,8 @@ services:
       container_name: 'thread_frontend'
       restart: on-failure
       ports:
-          - "4200:80"
+          - "80:80"
+          - "443:443"
       networks:
           - back
           - front
