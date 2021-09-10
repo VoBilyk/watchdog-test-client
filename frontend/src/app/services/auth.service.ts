@@ -36,11 +36,11 @@ export class AuthenticationService {
     }
 
     public register(user: UserRegisterDto) {
-        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`register`, user));
+        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`/register`, user));
     }
 
     public login(user: UserLoginDto) {
-        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`auth/login`, user));
+        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`/auth/login`, user));
     }
 
     public logout() {
@@ -56,7 +56,7 @@ export class AuthenticationService {
     }
 
     public revokeRefreshToken() {
-        return this.httpService.postFullRequest<AccessTokenDto>(`token/revoke`, {
+        return this.httpService.postFullRequest<AccessTokenDto>(`/token/revoke`, {
             refreshToken: localStorage.getItem('refreshToken')
         });
     }
@@ -68,7 +68,7 @@ export class AuthenticationService {
 
     public refreshTokens() {
         return this.httpService
-            .postFullRequest<AccessTokenDto>(`token/refresh`, {
+            .postFullRequest<AccessTokenDto>(`/token/refresh`, {
                 accessToken: JSON.parse(localStorage.getItem('accessToken')),
                 refreshToken: JSON.parse(localStorage.getItem('refreshToken'))
             })

@@ -3,7 +3,7 @@ COPY package.json package-lock.json ./
 RUN npm install && mkdir /client && mv ./node_modules ./client
 WORKDIR /client
 COPY . .
-RUN npm run build
+RUN npx ng build --prod
 
 FROM nginx:1.21.1-alpine
 COPY nginx.conf /etc/nginx/nginx.conf
