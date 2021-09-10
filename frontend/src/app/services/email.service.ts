@@ -4,7 +4,7 @@ import { HttpInternalService } from "./http-internal.service";
 
 @Injectable({ providedIn: 'root' })
 export class EmailService {
-    public routePrefix = '/api/email';
+    public routePrefix = '/email';
 
     constructor(private httpService: HttpInternalService) { }
 

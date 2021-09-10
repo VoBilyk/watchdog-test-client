@@ -8,6 +8,7 @@ import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
 import { AuthDialogService } from '../../services/auth-dialog.service';
 import { takeUntil } from 'rxjs/operators';
+import { WatchdogDialogService } from 'src/app/services/watchdog-dialog.service';
 
 @Component({
     selector: 'app-home',
@@ -21,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     constructor(
         private authDialogService: AuthDialogService,
+        private watchdogDialogService: WatchdogDialogService,
         private authService: AuthenticationService,
         private eventService: EventService,
         private userService: UserService,
@@ -28,6 +30,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     ) { }
 
     public ngOnInit() {
+        this.authService.initWatchdog();
         this.getUser();
 
         this.eventService.userChangedEvent$
@@ -50,6 +53,10 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.authDialogService.openAuthDialog(type);
     }
 
+    public openWatchdogSettings() {
+        this.watchdogDialogService.openDialog();
+    }
+
     private getUser() {
         if (!this.authService.areTokensExist()) {
             return;
@@ -58,6 +65,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.authService
             .getUser()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((user) => (this.authorizedUser = this.userService.copyUser(user)));
+            .subscribe((user) => {
+                this.authorizedUser = this.userService.copyUser(user);
+                this.authService.setWatchdogUser(this.authorizedUser)
+            });
     }
 }

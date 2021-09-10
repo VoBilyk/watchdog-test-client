@@ -4,7 +4,7 @@ import { User } from '../models/user';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    public routePrefix = '/api/users';
+    public routePrefix = '/users';
 
     constructor(private httpService: HttpInternalService) {}
 

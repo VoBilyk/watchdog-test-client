@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  sql_server:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    container_name: sql_server
+    ports:
+      - 1433:1433
+    networks:
+      - back
+    environment:
+      SA_PASSWORD: MySecretPassword!
+      ACCEPT_EULA: "Y"
+
+  thread_backend:
+    depends_on:
+      - sql_server
+    build:
+      context: ./backend
+      args:
+        - PROJECT_PORT=5050
+    container_name: 'thread_backend'
+    restart: on-failure
+    ports:
+        - "5050:5050"
+    networks:
+        - back
+    environment:
+        ASPNETCORE_ENVIRONMENT: 'Production'
+        ConnectionStrings__ThreadDBConnection: 'Server=sql_server;Database=ThreadDB;User ID=SA;Password=MySecretPassword!'
+
+  thread_frontend:
+    depends_on:
+        - thread_backend
+    build:
+        context: ./frontend
+        dockerfile: Dockerfile
+    container_name: 'thread_frontend'
+    restart: on-failure
+    ports:
+        - "4200:80"
+    networks:
+        - back
+        - front
+
+networks:
+    back:
+        driver: bridge
+    front:
+        driver: bridge

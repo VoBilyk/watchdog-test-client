@@ -7,7 +7,7 @@ import { UpdatePost } from '../models/post/update-post';
 
 @Injectable({ providedIn: 'root' })
 export class PostService {
-    public routePrefix = '/api/posts';
+    public routePrefix = '/posts';
 
     constructor(private httpService: HttpInternalService) { }
 

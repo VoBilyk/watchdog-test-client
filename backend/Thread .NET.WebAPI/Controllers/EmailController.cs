@@ -6,7 +6,7 @@ using Thread_.NET.Common.DTO.Email;
 
 namespace Thread_.NET.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [AllowAnonymous]
     [ApiController]
     public class EmailController : ControllerBase

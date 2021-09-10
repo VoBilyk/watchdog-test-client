@@ -1,7 +1,8 @@
+import * as Watchdog from '@watchdog-bsa/watchdog-js';
 import { Injectable } from '@angular/core';
 import { HttpInternalService } from './http-internal.service';
 import { AccessTokenDto } from '../models/token/access-token-dto';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
 import { UserRegisterDto } from '../models/auth/user-register-dto';
 import { AuthUser } from '../models/auth/auth-user';
@@ -13,7 +14,6 @@ import { EventService } from './event.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
-    public routePrefix = '/api';
     private user: User;
 
     constructor(private httpService: HttpInternalService, private userService: UserService, private eventService: EventService) {}
@@ -36,11 +36,11 @@ export class AuthenticationService {
     }
 
     public register(user: UserRegisterDto) {
-        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`${this.routePrefix}/register`, user));
+        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`register`, user));
     }
 
     public login(user: UserLoginDto) {
-        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`${this.routePrefix}/auth/login`, user));
+        return this._handleAuthResponse(this.httpService.postFullRequest<AuthUser>(`auth/login`, user));
     }
 
     public logout() {
@@ -48,6 +48,7 @@ export class AuthenticationService {
         this.removeTokensFromStorage();
         this.user = undefined;
         this.eventService.userChanged(undefined);
+        this.setWatchdogUser(undefined);
     }
 
     public areTokensExist() {
@@ -55,7 +56,7 @@ export class AuthenticationService {
     }
 
     public revokeRefreshToken() {
-        return this.httpService.postFullRequest<AccessTokenDto>(`${this.routePrefix}/token/revoke`, {
+        return this.httpService.postFullRequest<AccessTokenDto>(`token/revoke`, {
             refreshToken: localStorage.getItem('refreshToken')
         });
     }
@@ -67,7 +68,7 @@ export class AuthenticationService {
 
     public refreshTokens() {
         return this.httpService
-            .postFullRequest<AccessTokenDto>(`${this.routePrefix}/token/refresh`, {
+            .postFullRequest<AccessTokenDto>(`token/refresh`, {
                 accessToken: JSON.parse(localStorage.getItem('accessToken')),
                 refreshToken: JSON.parse(localStorage.getItem('refreshToken'))
             })
@@ -79,15 +80,62 @@ export class AuthenticationService {
             );
     }
 
+    public getWatchdogApiKey() {
+        return localStorage.getItem('watchdogApiKey');
+    }
+
+    public setWatchdogApiKey(apiKey: string) {
+        const previousKey = this.getWatchdogApiKey();
+        localStorage.setItem('watchdogApiKey', apiKey);
+
+        if (!previousKey) {
+            return Watchdog.init(apiKey, false);
+        }
+
+        location.reload();
+    }
+
+    public watchdogEnabled() {
+        return !!this.getWatchdogApiKey();
+    }
+
+    public initWatchdog() {
+        const apiKey = this.getWatchdogApiKey();
+        if (apiKey) {
+            Watchdog.init(apiKey, false);
+        }
+    }
+
+    public setWatchdogUser(user: User) {
+        if (!user) {
+            return Watchdog.setUserInfo({ isAnonymous: true });
+        }
+
+        return Watchdog.setUserInfo({
+            identifier: user.email,
+            email: user.email,
+            fullName: user.userName
+        });
+    }
+
     private _handleAuthResponse(observable: Observable<HttpResponse<AuthUser>>) {
         return observable.pipe(
-            map((resp) => {
-                this._setTokens(resp.body.token);
-                this.user = resp.body.user;
-                this.eventService.userChanged(resp.body.user);
-                return resp.body.user;
-            })
+            tap(resp => this._setAuthUser(resp.body)),
+            map((resp) => resp.body.user)
         );
+    }
+
+    private _setAuthUser(authUser: AuthUser) {
+        this._setTokens(authUser.token);
+        this.user = authUser.user;
+        if (this.watchdogEnabled()) {
+            Watchdog.setUserInfo({
+                identifier: this.user.email,
+                email: this.user.email,
+                fullName: this.user.userName
+            });
+        }
+        this.eventService.userChanged(authUser.user);
     }
 
     private _setTokens(tokens: AccessTokenDto) {

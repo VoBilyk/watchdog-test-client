@@ -7,7 +7,7 @@ using Thread_.NET.Extensions;
 
 namespace Thread_.NET.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     [ApiController]
     public class TokenController : ControllerBase

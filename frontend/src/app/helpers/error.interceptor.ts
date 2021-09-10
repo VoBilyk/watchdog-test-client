@@ -45,7 +45,7 @@ export class ErrorInterceptor implements HttpInterceptor {
                     ? response.error.error || response.error.message
                     : response.message || `${response.status} ${response.statusText}`;
 
-                return throwError(error);
+                return throwError(response);
             })
         );
     }

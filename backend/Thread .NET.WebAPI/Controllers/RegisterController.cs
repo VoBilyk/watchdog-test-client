@@ -6,7 +6,7 @@ using Thread_.NET.Common.DTO.User;
 
 namespace Thread_.NET.WebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [AllowAnonymous]
     [ApiController]
     public class RegisterController : ControllerBase

@@ -8,7 +8,7 @@ using Thread_.NET.Extensions;
 
 namespace Thread_.NET.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [Authorize]
     [ApiController]
     public class UsersController : ControllerBase

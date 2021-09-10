@@ -1,0 +1,12 @@
+<h2 mat-dialog-title class="title">Watchdog Setup</h2>
+<div mat-dialog-content>
+  <form name="watchdogForm" #watchdogForm="ngForm" class="main-content">
+    <mat-form-field>
+      <input name="watchdogKey" [(ngModel)]="apiKey" #inWatchdogKey="ngModel" matInput placeholder="Watchdog API KEY">
+    </mat-form-field>
+  </form>
+</div>
+<div class="actions">
+  <button mat-raised-button (click)="close()">Back</button>
+  <button mat-raised-button color="primary" [disabled]="!apiKey" (click)="apply()">Apply</button>
+</div>

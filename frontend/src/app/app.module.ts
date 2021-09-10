@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -22,14 +22,17 @@ import { DeleteCommentDialogComponent } from './components/comment/delete-commen
 import { DeletePostDialogComponent } from './components/post/delete-comment-dialog/delete-post-dialog.component';
 import { ShowReactionsDialogComponent } from './components/show-reactions-dialog/show-reactions.component';
 import { SharePostDialogComponent } from './components/post/share-post-dialog/share-post-dialog.component';
+import { WatchDogErrorHandler } from './helpers/watchdog.interceptor';
+import { WatchdogSetupDialogComponent } from './components/watchdog-setup-dialog/watchdog-setup-dialog.component';
 
 @NgModule({
-    declarations: [AppComponent, MainThreadComponent, PostComponent, HomeComponent, UserProfileComponent, AuthDialogComponent, CommentComponent, AddUpdatePostComponent, EditCommentDialogComponent, DeleteCommentDialogComponent, DeletePostDialogComponent, ShowReactionsDialogComponent, SharePostDialogComponent],
+    declarations: [AppComponent, MainThreadComponent, PostComponent, HomeComponent, UserProfileComponent, AuthDialogComponent, CommentComponent, AddUpdatePostComponent, EditCommentDialogComponent, DeleteCommentDialogComponent, DeletePostDialogComponent, ShowReactionsDialogComponent, SharePostDialogComponent, WatchdogSetupDialogComponent],
     imports: [BrowserModule, BrowserAnimationsModule, HttpClientModule, MaterialComponentsModule, RouterModule.forRoot(AppRoutes), FormsModule, ReactiveFormsModule],
     exports: [MaterialComponentsModule],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+        { provide: ErrorHandler, useClass: WatchDogErrorHandler },
     ],
     bootstrap: [AppComponent]
 })

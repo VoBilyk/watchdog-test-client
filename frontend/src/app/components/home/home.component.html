@@ -4,7 +4,10 @@
       <img src="/assets/thread.png">
       Thread.NET
     </div>
-    <div *ngIf="!authorizedUser" class="header-content auth-area">
+    <div class="header-content header-link">
+        <p (click)="openWatchdogSettings()">WATCHDOG SETTINGS</p>
+    </div>
+    <div *ngIf="!authorizedUser" class="header-content header-link">
       <p (click)="openAuthDialog(dialogType.SignIn)">Sign In</p> |
       <p (click)="openAuthDialog(dialogType.SignUp)">Sign Up</p>
     </div>

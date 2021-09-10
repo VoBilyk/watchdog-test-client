@@ -7,7 +7,7 @@ import { NewReaction } from '../models/reactions/newReaction';
 
 @Injectable({ providedIn: 'root' })
 export class CommentService {
-    public routePrefix = '/api/comments';
+    public routePrefix = '/comments';
 
     constructor(private httpService: HttpInternalService) { }
 
