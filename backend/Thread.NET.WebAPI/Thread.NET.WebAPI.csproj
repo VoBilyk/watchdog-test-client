@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Thread .NET.BLL\Thread .NET.BLL.csproj" />
+    <ProjectReference Include="..\Thread.NET.BLL\Thread.NET.BLL.csproj" />
   </ItemGroup>
 
 </Project>
